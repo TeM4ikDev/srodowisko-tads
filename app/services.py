@@ -2,6 +2,8 @@
 
 import csv
 
+_RAPORTY = []
+
 
 def wczytaj_zamowienia(sciezka):
     """Zwraca liste zamowien; kolumny przychod i koszt przeksztalcone na float."""
@@ -32,3 +34,13 @@ def policz_wskazniki(sciezka, region=None):
         "koszt": koszt,
         "marza": marza,
     }
+
+
+def zapisz_raport(rok, region):
+    """Dopisuje raport do magazynu utrzymywanego w pamieci procesu."""
+    _RAPORTY.append({"rok": rok, "region": region})
+
+
+def raporty_roku(rok):
+    """Zwraca raporty zapisane dla danego roku."""
+    return [r for r in _RAPORTY if r["rok"] == rok]
