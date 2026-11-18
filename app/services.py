@@ -1,6 +1,9 @@
 """Warstwa uslug: obliczenia wskaznikow niezalezne od frameworka webowego."""
 
 import csv
+import io
+
+KOLUMNY_ZBIORU = {"data", "region", "przychod", "koszt"}
 
 _RAPORTY = []
 
@@ -42,6 +45,16 @@ def policz_wskazniki(sciezka, region=None, rok=None):
 def zestawienie_regionow(sciezka):
     """Zwraca wskazniki kazdego regionu, w kolejnosci alfabetycznej kodow."""
     return [policz_wskazniki(sciezka, region) for region in dostepne_regiony(sciezka)]
+
+
+def wczytaj_zbior(strumien):
+    """Zwraca liczbe zamowien w pliku CSV (strumien binarny) albo zglasza ValueError."""
+    tekst = strumien.read().decode("utf-8")  # UnicodeDecodeError dziedziczy po ValueError
+    czytnik = csv.DictReader(io.StringIO(tekst))
+    brakujace = sorted(KOLUMNY_ZBIORU - set(czytnik.fieldnames or []))
+    if brakujace:
+        raise ValueError("brak kolumn: " + ", ".join(brakujace))
+    return sum(1 for _ in czytnik)
 
 
 def zapisz_raport(rok, region, uwagi=""):
