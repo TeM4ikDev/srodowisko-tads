@@ -1,3 +1,5 @@
+from datetime import date
+
 from flask import Blueprint, abort, current_app, redirect, render_template, request, url_for
 
 from .services import (
@@ -26,7 +28,12 @@ def kpi():
         abort(404, description=f"Nieznany region: {region}")
     w = policz_wskazniki(sciezka, region)
     current_app.logger.info("Obliczono wskaźniki dla regionu %s", w["region"])
-    return render_template("panel.html", wskazniki=w, zestawienie=zestawienie_regionow(sciezka))
+    return render_template(
+        "panel.html",
+        wskazniki=w,
+        zestawienie=zestawienie_regionow(sciezka),
+        dzisiaj=date.today(),
+    )
 
 
 @panel_bp.get("/regiony/<region:kod>")
@@ -35,7 +42,12 @@ def region(kod):
     if kod not in dostepne_regiony(sciezka):
         abort(404, description=f"Nieznany region: {kod}")
     w = policz_wskazniki(sciezka, kod)
-    return render_template("panel.html", wskazniki=w, zestawienie=zestawienie_regionow(sciezka))
+    return render_template(
+        "panel.html",
+        wskazniki=w,
+        zestawienie=zestawienie_regionow(sciezka),
+        dzisiaj=date.today(),
+    )
 
 
 @panel_bp.get("/raporty/", defaults={"rok": ROK_DOMYSLNY})
