@@ -1,6 +1,15 @@
 from datetime import date
 
-from flask import Blueprint, abort, current_app, flash, redirect, render_template, request, url_for
+from flask import (
+    Blueprint,
+    abort,
+    current_app,
+    flash,
+    redirect,
+    render_template,
+    request,
+    url_for,
+)
 from werkzeug.utils import secure_filename
 
 from .forms import FiltrForm, RaportForm, ZbiorForm
