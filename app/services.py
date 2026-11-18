@@ -44,9 +44,14 @@ def zestawienie_regionow(sciezka):
     return [policz_wskazniki(sciezka, region) for region in dostepne_regiony(sciezka)]
 
 
-def zapisz_raport(rok, region):
+def zapisz_raport(rok, region, uwagi=""):
     """Dopisuje raport do magazynu utrzymywanego w pamieci procesu."""
-    _RAPORTY.append({"rok": rok, "region": region})
+    _RAPORTY.append({"rok": rok, "region": region, "uwagi": uwagi})
+
+
+def wykaz_raportow():
+    """Zwraca wszystkie zapisane raporty."""
+    return list(_RAPORTY)
 
 
 def raporty_roku(rok):
