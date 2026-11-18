@@ -36,6 +36,11 @@ def policz_wskazniki(sciezka, region=None):
     }
 
 
+def zestawienie_regionow(sciezka):
+    """Zwraca wskazniki kazdego regionu, w kolejnosci alfabetycznej kodow."""
+    return [policz_wskazniki(sciezka, region) for region in dostepne_regiony(sciezka)]
+
+
 def zapisz_raport(rok, region):
     """Dopisuje raport do magazynu utrzymywanego w pamieci procesu."""
     _RAPORTY.append({"rok": rok, "region": region})

@@ -1,6 +1,12 @@
-from flask import Blueprint, abort, current_app, redirect, request, url_for
+from flask import Blueprint, abort, current_app, redirect, render_template, request, url_for
 
-from .services import dostepne_regiony, policz_wskazniki, raporty_roku, zapisz_raport
+from .services import (
+    dostepne_regiony,
+    policz_wskazniki,
+    raporty_roku,
+    zapisz_raport,
+    zestawienie_regionow,
+)
 
 panel_bp = Blueprint("panel", __name__)
 
@@ -20,7 +26,7 @@ def kpi():
         abort(404, description=f"Nieznany region: {region}")
     w = policz_wskazniki(sciezka, region)
     current_app.logger.info("Obliczono wskaźniki dla regionu %s", w["region"])
-    return f"<h1>Wskaźniki: {w['region'] or 'wszystkie regiony'}</h1><p>Marża: {w['marza']:.2%}</p>"
+    return render_template("panel.html", wskazniki=w, zestawienie=zestawienie_regionow(sciezka))
 
 
 @panel_bp.get("/regiony/<region:kod>")
@@ -28,8 +34,8 @@ def region(kod):
     sciezka = current_app.config["SCIEZKA_DANYCH"]
     if kod not in dostepne_regiony(sciezka):
         abort(404, description=f"Nieznany region: {kod}")
-    liczba = policz_wskazniki(sciezka, kod)["liczba_zamowien"]
-    return f"<h1>Region {kod}</h1><p>Zamówień: {liczba}</p>"
+    w = policz_wskazniki(sciezka, kod)
+    return render_template("panel.html", wskazniki=w, zestawienie=zestawienie_regionow(sciezka))
 
 
 @panel_bp.get("/raporty/", defaults={"rok": ROK_DOMYSLNY})
