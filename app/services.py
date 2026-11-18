@@ -19,10 +19,13 @@ def dostepne_regiony(sciezka):
     return sorted({z["region"] for z in wczytaj_zamowienia(sciezka)})
 
 
-def policz_wskazniki(sciezka, region=None):
-    """Zwraca wskazniki dla regionu albo dla calego zbioru, gdy region jest None."""
+def policz_wskazniki(sciezka, region=None, rok=None):
+    """Zwraca wskazniki dla regionu i roku albo dla calego zbioru, gdy kryteria sa None."""
     zamowienia = [
-        z for z in wczytaj_zamowienia(sciezka) if region is None or z["region"] == region
+        z
+        for z in wczytaj_zamowienia(sciezka)
+        if (region is None or z["region"] == region)
+        and (rok is None or z["data"].startswith(str(rok)))
     ]
     przychod = round(sum(z["przychod"] for z in zamowienia), 2)
     koszt = round(sum(z["koszt"] for z in zamowienia), 2)

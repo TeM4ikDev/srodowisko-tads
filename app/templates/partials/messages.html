@@ -1,4 +1,6 @@
 {# partials/messages.html #}
+{# kategorie Flask (success, warning, error) odpowiadaja klasom arkusza stylow #}
+{% set klasy = {"success": "sukces", "warning": "ostrzezenie", "error": "blad"} %}
 {% for kategoria, tresc in get_flashed_messages(with_categories=true) %}
-  <p class="komunikat {{ kategoria }}">{{ tresc }}</p>
+  <p class="komunikat {{ klasy.get(kategoria, kategoria) }}">{{ tresc }}</p>
 {% endfor %}
